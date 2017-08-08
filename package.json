@@ -1,0 +1,23 @@
+{
+  "name": "things.xyz",
+  "version": "1.0.0",
+  "description": "A federated community newspaper",
+  "main": "index.js",
+  "repository": "https://github.com/rrdelaney/things.xyz",
+  "author": "Ryan Delaney <rrdelaney@outlook.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.24.1",
+    "gaze": "^1.1.2",
+    "webpack": "^3.4.1",
+    "webpack-hot-middleware": "^2.18.2"
+  },
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "express": "^4.15.4",
+    "morgan": "^1.8.2"
+  }
+}
