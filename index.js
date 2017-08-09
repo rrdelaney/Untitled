@@ -12,7 +12,28 @@ const logErr = msg => console.error(chalk.red(`==> ${err}`))
 
 const app = express()
 
-app.use(morgan(':method :url'))
+app.use(morgan('dev'))
+
+if (!IS_PRODUCTION) {
+  const webpack = require('webpack')
+  const webpackDevMiddleware = require('webpack-dev-middleware')
+  const webpackHotMiddleware = require('webpack-hot-middleware')
+  const webpackConfig = require('./scripts/webpack.config.dev')
+
+  const compiler = webpack(webpackConfig)
+  app.use(
+    webpackDevMiddleware(compiler, {
+      noInfo: true,
+      stats: {
+        colors: true
+      }
+    })
+  )
+
+  app.use(webpackHotMiddleware(compiler))
+} else {
+  app.use(express.static('build'))
+}
 
 app.use((...handler) => require('./src/server').handleRequest(...handler))
 

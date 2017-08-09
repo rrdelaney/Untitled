@@ -1,0 +1,26 @@
+const path = require('path')
+const webpack = require('webpack')
+
+module.exports = {
+  entry: [
+    'webpack-hot-middleware/client',
+    path.resolve(__dirname, '..', 'src', 'client.js')
+  ],
+  output: {
+    path: path.resolve(__dirname, '..', 'build'),
+    filename: 'app.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        include: [path.resolve(__dirname, '..', 'src')],
+        loader: 'babel-loader',
+        options: {
+          presets: ['react', 'env']
+        }
+      }
+    ]
+  },
+  plugins: [new webpack.HotModuleReplacementPlugin()]
+}
