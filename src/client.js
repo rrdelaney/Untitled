@@ -9,6 +9,6 @@ ReactDOM.render(<App />, root)
 if (module.hot) {
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default
-    ReactDOM.render(<NextApp />)
+    ReactDOM.render(<NextApp />, root)
   })
 }

@@ -1,6 +1,7 @@
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 if (!IS_PRODUCTION) require('babel-register')({ cache: false })
 
+const path = require('path')
 const express = require('express')
 const morgan = require('morgan')
 const chalk = require('chalk')
@@ -46,8 +47,11 @@ if (!IS_PRODUCTION) {
 
   gaze('src/**/*.js', (err, watcher) => {
     watcher.on('changed', filepath => {
-      delete require.cache[filepath]
-      logMsg('Server reloaded!')
+      for (let name in require.cache) {
+        if (name.startsWith(path.resolve(__dirname, 'src'))) {
+          delete require.cache[name]
+        }
+      }
     })
   })
 }

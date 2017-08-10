@@ -17,7 +17,15 @@ module.exports = {
         include: [path.resolve(__dirname, '..', 'src')],
         loader: 'babel-loader',
         options: {
-          presets: ['react', 'env']
+          presets: [
+            'react',
+            [
+              'env',
+              {
+                modules: false
+              }
+            ]
+          ]
         }
       }
     ]
