@@ -6,17 +6,22 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const RedisStore = require('connect-redis')(session)
 const morgan = require('morgan')
 const chalk = require('chalk')
 const passport = require('passport')
 const { Strategy: FacebookStrategy } = require('passport-facebook')
 
-const PORT = process.env.PORT || 3000
+const {
+  PORT = 3000,
+  HOSTNAME = 'http://localhost:3000',
+  REDIS_URL,
+  FACEBOOK_APP_ID,
+  FACEBOOK_APP_SECRET
+} = process.env
 
 const logMsg = msg => console.log(chalk.cyan(`==> ${msg}`))
 const logErr = msg => console.error(chalk.red(`==> ${err}`))
-
-const users = {}
 
 const app = express()
 
@@ -27,13 +32,12 @@ app.use(morgan('dev'))
 passport.use(
   new FacebookStrategy(
     {
-      clientID: process.env.FACEBOOK_APP_ID,
-      clientSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackURL: `${process.env.HOSTNAME}/auth/facebook/callback`
+      clientID: FACEBOOK_APP_ID,
+      clientSecret: FACEBOOK_APP_SECRET,
+      callbackURL: `${HOSTNAME}/auth/facebook/callback`
     },
     (accessToken, refreshToken, profile, done) => {
-      users[profile.id] = profile
-      done(null, users[profile.id])
+      done(null, profile)
     }
   )
 )
@@ -47,7 +51,12 @@ passport.deserializeUser((user, done) => {
 })
 
 app.use(bodyParser())
-app.use(session({ secret: 'shhh' }))
+app.use(
+  session({
+    secret: 'shhh',
+    store: new RedisStore({ url: REDIS_URL })
+  })
+)
 app.use(passport.initialize())
 app.use(passport.session())
 
