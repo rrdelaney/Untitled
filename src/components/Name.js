@@ -6,11 +6,12 @@ const mapStateToProps = state => ({
   name: state.auth && state.auth.name
 })
 
-export default connect(mapStateToProps)(
-  ({ name }) =>
-    name
-      ? <Header as="h2">
-          Hello {name}!!
-        </Header>
-      : <Header as="h2">Not logged in</Header>
-)
+export function Name({ name }) {
+  return name
+    ? <Header as="h2">
+        Hello {name}!!
+      </Header>
+    : <Header as="h2">Not logged in</Header>
+}
+
+export default connect(mapStateToProps)(Name)
