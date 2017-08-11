@@ -1,6 +1,6 @@
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 if (!IS_PRODUCTION) require('babel-register')({ cache: false })
-if (!IS_PRODUCTION) require('dotenv').config()
+require('dotenv').config()
 
 const path = require('path')
 const express = require('express')
@@ -95,11 +95,20 @@ if (!IS_PRODUCTION) {
 
   app.use(webpackHotMiddleware(compiler, { log: false }))
 } else {
+  const stats = require('./build/stats')
+  const assets = [stats['main.js']]
+
   app.use(express.static('build'))
+  app.use((req, res, next) => {
+    res.locals.assets = assets
+    next()
+  })
 }
 
 // Require server.js request handler for everything else
-app.use((...handler) => require('./src/server').handleRequest(...handler))
+app.use((...handler) =>
+  require(`./${IS_PRODUCTION ? 'lib' : 'src'}/server`).handleRequest(...handler)
+)
 
 // Start the server
 app.listen(PORT, () => {

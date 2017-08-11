@@ -18,18 +18,34 @@ export const handleRequest = (req: $Request, res: $Response) => {
 
   const initialState = getInitialState(store)
   const content = ReactDOMServer.renderToString(<App store={store} />)
+  const assets = getAssets(res)
 
   res.send(`<!doctype html>
 <html>
   <head>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
+    ${assets
+      .filter(s => s.endsWith('.css'))
+      .map(s => `<link rel="stylesheet" href="${s}">`)
+      .join('    \n')}
+    ${assets
+      .filter(s => s.endsWith('.js') && !s.includes('hot-update'))
+      .map(s => `<script async src="${s}"></script>`)
+      .join('    \n')}
     <script>window.INITIAL_STATE = ${initialState}</script>
   </head>
   <body>
     <div id="root">${content}</div>
-    <script src="/app.js"></script>
   </body>
 </html>`)
+}
+
+function getAssets(res: any): string[] {
+  if (res.locals.assets) {
+    return res.locals.assets
+  } else {
+    return [].concat(res.locals.webpackStats.toJson().assetsByChunkName.main)
+  }
 }
 
 function serializeUser(req): { id: string, name: string } | null {

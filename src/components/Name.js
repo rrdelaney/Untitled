@@ -10,7 +10,7 @@ export default connect(mapStateToProps)(
   ({ name }) =>
     name
       ? <Header as="h2">
-          Hello {name}!
+          Hello {name}!!
         </Header>
       : <Header as="h2">Not logged in</Header>
 )

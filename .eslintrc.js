@@ -40,7 +40,6 @@ module.exports = {
     'no-self-compare': 1,
     'no-sequences': 1,
     'no-unmodified-loop-condition': 1,
-    'no-unused-expressions': 1,
     'no-useless-concat': 1,
     'no-void': 1,
     'no-with': 1,
