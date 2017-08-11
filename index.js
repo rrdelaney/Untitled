@@ -85,13 +85,15 @@ if (!IS_PRODUCTION) {
   app.use(
     webpackDevMiddleware(compiler, {
       noInfo: true,
+      serverSideRender: true,
+      quiet: true,
       stats: {
         colors: true
       }
     })
   )
 
-  app.use(webpackHotMiddleware(compiler))
+  app.use(webpackHotMiddleware(compiler, { log: false }))
 } else {
   app.use(express.static('build'))
 }

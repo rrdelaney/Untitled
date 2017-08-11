@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const BeatifulWebpackPlugin = require('./beautiful-webpack')
 
 module.exports = {
   entry: [
@@ -30,5 +31,8 @@ module.exports = {
       }
     ]
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new BeatifulWebpackPlugin('Things', 'http://localhost:3000')
+  ]
 }
