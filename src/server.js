@@ -17,7 +17,7 @@ export const handleRequest = (req: $Request, res: $Response) => {
   if (user) store.dispatch(login(user))
 
   const initialState = getInitialState(store)
-  const content = ReactDOMServer.renderToString(<App />)
+  const content = ReactDOMServer.renderToString(<App store={store} />)
 
   res.send(`<!doctype html>
 <html>
@@ -27,7 +27,7 @@ export const handleRequest = (req: $Request, res: $Response) => {
 </html>`)
 }
 
-function serializeUser(req: $Request): { id: string, name: string } | null {
+function serializeUser(req): { id: string, name: string } | null {
   ;(req: any)
 
   if (!req.user || !req.user._json) return null
@@ -36,5 +36,5 @@ function serializeUser(req: $Request): { id: string, name: string } | null {
 }
 
 function getInitialState(store): string {
-  return serialize(store.getState())
+  return serialize(store.getState(), { isJSON: true })
 }
