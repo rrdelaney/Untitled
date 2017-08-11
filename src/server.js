@@ -21,9 +21,14 @@ export const handleRequest = (req: $Request, res: $Response) => {
 
   res.send(`<!doctype html>
 <html>
-  <script>window.INITIAL_STATE = ${initialState}</script>
-  <div id="root">${content}</div>
-  <script src="/app.js"></script>
+  <head>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
+    <script>window.INITIAL_STATE = ${initialState}</script>
+  </head>
+  <body>
+    <div id="root">${content}</div>
+    <script src="/app.js"></script>
+  </body>
 </html>`)
 }
 

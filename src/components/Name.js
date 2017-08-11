@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Header } from 'semantic-ui-react'
 
 const mapStateToProps = state => ({
   name: state.auth && state.auth.name
@@ -8,8 +9,8 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps)(
   ({ name }) =>
     name
-      ? <p>
+      ? <Header as="h2">
           Hello {name}!
-        </p>
-      : <p>Not logged in</p>
+        </Header>
+      : <Header as="h2">Not logged in</Header>
 )
