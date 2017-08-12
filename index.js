@@ -11,6 +11,7 @@ const morgan = require('morgan')
 const chalk = require('chalk')
 const passport = require('passport')
 const { Strategy: FacebookStrategy } = require('passport-facebook')
+const { graphiqlExpress } = require('apollo-server-express')
 
 const {
   PORT = 3000,
@@ -50,7 +51,7 @@ passport.deserializeUser((user, done) => {
   done(null, user)
 })
 
-app.use(bodyParser())
+app.use(bodyParser.json())
 app.use(
   session({
     secret: 'shhh',
@@ -105,6 +106,17 @@ if (!IS_PRODUCTION) {
   })
 }
 
+app.use('/graphql', (...handler) => {
+  require(`./${IS_PRODUCTION ? 'lib' : 'src'}/server`).handleGraphQL(...handler)
+})
+
+app.use(
+  '/graphiql',
+  graphiqlExpress({
+    endpointURL: '/graphql'
+  })
+)
+
 // Require server.js request handler for everything else
 app.use((...handler) =>
   require(`./${IS_PRODUCTION ? 'lib' : 'src'}/server`).handleRequest(...handler)
@@ -119,7 +131,7 @@ app.listen(PORT, () => {
 if (!IS_PRODUCTION) {
   const gaze = require('gaze')
 
-  gaze('src/**/*.js', (err, watcher) => {
+  gaze(['src/**/*.js', 'schema.graphql'], (err, watcher) => {
     watcher.on('changed', filepath => {
       for (let name in require.cache) {
         if (name.startsWith(path.resolve(__dirname, 'src'))) {

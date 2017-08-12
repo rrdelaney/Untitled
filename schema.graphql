@@ -1,0 +1,28 @@
+# A registered user
+type User {
+  # Unique id for the user
+  id: ID!
+  # All posts that they have made
+  posts: [Post]
+}
+
+# A post on a topic
+type Post {
+  # Unique id for a post
+  id: ID!
+  # Post's title
+  title: String!
+  # Post's author
+  author: User!
+}
+
+type Query {
+  # Find a user by id
+  user(id: ID!): User
+  # Find a post by id
+  post(id: ID!): Post
+}
+
+schema {
+  query: Query
+}

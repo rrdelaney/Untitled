@@ -3,10 +3,38 @@
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import serialize from 'serialize-javascript'
-import type { $Request, $Response } from 'express'
+import type { $Request, $Response, NextFunction } from 'express'
+import { graphqlExpress } from 'apollo-server-express'
+import createSchema from './api/createSchema'
 import App from './components/App'
 import { configureStore } from './store'
 import { login } from './store/actions'
+
+const db = {
+  '1': {
+    id: '1',
+    postIds: ['2', '3']
+  },
+  '2': {
+    id: '2',
+    title: 'Hello world',
+    authorId: '1'
+  },
+  '3': {
+    id: '3',
+    title: 'Hello world II',
+    authorId: '1'
+  }
+}
+
+export const handleGraphQL = (
+  ...handler: [$Request, $Response, NextFunction]
+) => {
+  const schema = createSchema()
+  const context = { db }
+
+  return graphqlExpress({ schema, context })(...handler)
+}
 
 export const handleRequest = (req: $Request, res: $Response) => {
   res.status(200)
