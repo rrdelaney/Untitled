@@ -1,3 +1,5 @@
+// @flow
+
 import { readFileSync } from 'fs'
 import path from 'path'
 import { makeExecutableSchema } from 'graphql-tools'

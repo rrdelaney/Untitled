@@ -5,40 +5,37 @@ import ReactDOMServer from 'react-dom/server'
 import serialize from 'serialize-javascript'
 import type { $Request, $Response, NextFunction } from 'express'
 import { graphqlExpress } from 'apollo-server-express'
+import _db from './api/db'
 import createSchema from './api/createSchema'
+import Context from './api/context'
 import App from './components/App'
 import { configureStore } from './store'
 import { login } from './store/actions'
 
-const db = {
-  '1': {
-    id: '1',
-    postIds: ['2', '3']
-  },
-  '2': {
-    id: '2',
-    title: 'Hello world',
-    authorId: '1'
-  },
-  '3': {
-    id: '3',
-    title: 'Hello world II',
-    authorId: '1'
+export async function registerUser(profile: {
+  id: string,
+  displayName: string
+}) {
+  const db = await _db
+  const user = await db.users.findOne({ id: profile.id })
+
+  if (!user) {
+    return db.users.insert({ id: profile.id, name: profile.displayName })
+  } else {
+    return user
   }
 }
 
-export const handleGraphQL = (
+export async function handleGraphQL(
   ...handler: [$Request, $Response, NextFunction]
-) => {
+) {
   const schema = createSchema()
-  const context = { db }
+  const context = new Context(await _db)
 
   return graphqlExpress({ schema, context })(...handler)
 }
 
-export const handleRequest = (req: $Request, res: $Response) => {
-  res.status(200)
-
+export async function handleRequest(req: $Request, res: $Response) {
   const store = configureStore()
 
   const user = serializeUser(req)
@@ -48,7 +45,7 @@ export const handleRequest = (req: $Request, res: $Response) => {
   const content = ReactDOMServer.renderToString(<App store={store} />)
   const assets = getAssets(res)
 
-  res.send(`<!doctype html>
+  res.status(200).send(`<!doctype html>
 <html>
   <head>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
@@ -68,6 +65,41 @@ export const handleRequest = (req: $Request, res: $Response) => {
 </html>`)
 }
 
+export function handleError(
+  err: Error,
+  req: $Request,
+  res: $Response,
+  next: NextFunction
+) {
+  if (res.headersSent) {
+    return next(err)
+  }
+
+  console.error(err.stack)
+  res.status(500).send(`<!doctype html>
+<html>
+  <head>
+    <style>
+      h1 {
+        color: red;
+        font-family: 'Helvetica Neue';
+        font-size: 36pt;
+        font-weight: 300;
+      }
+      pre {
+        font-family: 'Operator Mono';
+        font-size: 10pt;
+        width: 90vw;
+        white-space: pre-wrap;
+      }
+    </style>
+  <body>
+    <h1>There was an error :(</h1>
+    <pre>${err.stack}</pre>
+  </body>
+</html>`)
+}
+
 function getAssets(res: any): string[] {
   if (res.locals.assets) {
     return res.locals.assets
@@ -79,9 +111,9 @@ function getAssets(res: any): string[] {
 function serializeUser(req): { id: string, name: string } | null {
   ;(req: any)
 
-  if (!req.user || !req.user._json) return null
+  if (!req.user) return null
 
-  return (req.user: any)._json
+  return (req.user: any)
 }
 
 function getInitialState(store): string {

@@ -52,6 +52,7 @@ module.exports = {
     'no-label-var': 1,
     'no-shadow': 1,
     'no-undef-init': 1,
-    'no-use-before-define': 1
+    'no-use-before-define': 1,
+    'no-console': 0
   }
 }

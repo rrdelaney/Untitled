@@ -2,6 +2,8 @@
 type User {
   # Unique id for the user
   id: ID!
+  # Name of the user
+  name: String!
   # All posts that they have made
   posts: [Post]
 }

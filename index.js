@@ -38,7 +38,11 @@ passport.use(
       callbackURL: `${HOSTNAME}/auth/facebook/callback`
     },
     (accessToken, refreshToken, profile, done) => {
-      done(null, profile)
+      require(`./${IS_PRODUCTION ? 'lib' : 'src'}/server`)
+        .registerUser(profile)
+        .then(user => {
+          done(null, user)
+        })
     }
   )
 )
@@ -107,7 +111,11 @@ if (!IS_PRODUCTION) {
 }
 
 app.use('/graphql', (...handler) => {
-  require(`./${IS_PRODUCTION ? 'lib' : 'src'}/server`).handleGraphQL(...handler)
+  const { handleGraphQL, handleError } = require(`./${IS_PRODUCTION
+    ? 'lib'
+    : 'src'}/server`)
+
+  handleGraphQL(...handler).catch(e => handleError(e, ...handler))
 })
 
 app.use(
@@ -118,9 +126,20 @@ app.use(
 )
 
 // Require server.js request handler for everything else
-app.use((...handler) =>
-  require(`./${IS_PRODUCTION ? 'lib' : 'src'}/server`).handleRequest(...handler)
-)
+app.use((...handler) => {
+  const { handleRequest, handleError } = require(`./${IS_PRODUCTION
+    ? 'lib'
+    : 'src'}/server`)
+
+  handleRequest(...handler).catch(e => handleError(e, ...handler))
+})
+
+// Error handler for sync errors
+app.use((err, req, res, next) => {
+  const { handleError } = require(`./${IS_PRODUCTION ? 'lib' : 'src'}/server`)
+
+  handleError(err, req, res, next)
+})
 
 // Start the server
 app.listen(PORT, () => {
@@ -134,7 +153,10 @@ if (!IS_PRODUCTION) {
   gaze(['src/**/*.js', 'schema.graphql'], (err, watcher) => {
     watcher.on('changed', filepath => {
       for (let name in require.cache) {
-        if (name.startsWith(path.resolve(__dirname, 'src'))) {
+        if (
+          name.startsWith(path.resolve(__dirname, 'src')) &&
+          !name.endsWith('db.js')
+        ) {
           delete require.cache[name]
         }
       }
