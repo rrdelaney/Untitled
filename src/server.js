@@ -1,15 +1,16 @@
 // @flow
 
 import React from 'react'
-import ReactDOMServer from 'react-dom/server'
+import { renderToStringWithData } from 'react-apollo'
 import serialize from 'serialize-javascript'
 import type { $Request, $Response, NextFunction } from 'express'
 import { graphqlExpress } from 'apollo-server-express'
+import configureServerClient from './apollo/configureServerClient'
 import _db from './api/db'
-import createSchema from './api/createSchema'
+import schema from './api/schema'
 import Context from './api/context'
 import App from './components/App'
-import { configureStore } from './store'
+import configureStore from './store'
 import { login } from './store/actions'
 
 export async function registerUser(profile: {
@@ -30,20 +31,24 @@ export async function handleGraphQL(
   ...handler: [$Request, $Response, NextFunction]
 ) {
   const [req] = handler
-  const schema = createSchema()
   const context = new Context(await _db, serializeUser(req))
 
   return graphqlExpress({ schema, context })(...handler)
 }
 
 export async function handleRequest(req: $Request, res: $Response) {
-  const store = configureStore()
-
   const user = serializeUser(req)
+  const context = new Context(await _db, user)
+  const store = configureStore()
+  const client = configureServerClient(context)
+
   if (user) store.dispatch(login(user))
 
-  const initialState = getInitialState(store)
-  const content = ReactDOMServer.renderToString(<App store={store} />)
+  const content = await renderToStringWithData(
+    <App store={store} client={client} />
+  )
+
+  const initialState = getInitialState(store, client)
   const assets = getAssets(res)
 
   res.status(200).send(`<!doctype html>
@@ -117,6 +122,11 @@ function serializeUser(req): { id: string, name: string } | null {
   return (req.user: any)
 }
 
-function getInitialState(store): string {
-  return serialize(store.getState(), { isJSON: true })
+function getInitialState(store, client): string {
+  const initialState = {
+    ...store.getState(),
+    apollo: client.getInitialState()
+  }
+
+  return serialize(initialState, { isJSON: true })
 }

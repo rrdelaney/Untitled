@@ -1,18 +1,23 @@
 // @flow
 
 import React from 'react'
-import { Provider } from 'react-redux'
+import { ApolloProvider, ApolloClient } from 'react-apollo'
 import type { Store } from '../store'
 import Name from './Name'
+import Posts from './Posts'
 
 type AppProps = {
-  store: Store
+  store: Store,
+  client: ApolloClient
 }
 
-export default function App({ store }: AppProps) {
+export default function App({ store, client }: AppProps) {
   return (
-    <Provider store={store}>
-      <Name />
-    </Provider>
+    <ApolloProvider store={store} client={client}>
+      <div>
+        <Name />
+        <Posts />
+      </div>
+    </ApolloProvider>
   )
 }
