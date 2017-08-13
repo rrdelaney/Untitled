@@ -9,6 +9,12 @@ export const Query = {
 
   post(root: mixed, { id }: { id: string }, c: Context) {
     return c.postById(id)
+  },
+
+  self(root: mixed, args: mixed, c: Context) {
+    if (c.user === null) return
+
+    return c.userById(c.user.id)
   }
 }
 

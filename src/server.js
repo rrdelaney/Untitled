@@ -29,8 +29,9 @@ export async function registerUser(profile: {
 export async function handleGraphQL(
   ...handler: [$Request, $Response, NextFunction]
 ) {
+  const [req] = handler
   const schema = createSchema()
-  const context = new Context(await _db)
+  const context = new Context(await _db, serializeUser(req))
 
   return graphqlExpress({ schema, context })(...handler)
 }

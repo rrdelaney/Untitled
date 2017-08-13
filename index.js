@@ -59,7 +59,9 @@ app.use(bodyParser.json())
 app.use(
   session({
     secret: 'shhh',
-    store: new RedisStore({ url: REDIS_URL })
+    store: new RedisStore({ url: REDIS_URL }),
+    resave: true,
+    saveUninitialized: true
   })
 )
 app.use(passport.initialize())

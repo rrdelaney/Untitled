@@ -3,7 +3,8 @@
 import DataLoader from 'dataloader'
 
 type User = {
-  id: string
+  id: string,
+  name: string
 }
 
 type Post = {
@@ -14,8 +15,10 @@ type Post = {
 
 export default class Context {
   db: any
+  user: { id: string, name: string } | null
 
-  constructor(db: any) {
+  constructor(db: any, user: { id: string, name: string } | null) {
+    this.user = user
     this.db = db
   }
 

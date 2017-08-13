@@ -1,3 +1,18 @@
+// @flow
+
 import massive from 'massive'
 
-export default massive(process.env.DATABASE_URL)
+export default massive(process.env.DATABASE_URL, undefined, {
+  query(e) {
+    const { query } = e
+    const shouldLogQuery =
+      !query.includes('current_schema') &&
+      !query.includes('table_schema') &&
+      !query.includes('schemaname') &&
+      !query.includes('pg_namespace')
+
+    if (shouldLogQuery) {
+      console.log(query)
+    }
+  }
+})

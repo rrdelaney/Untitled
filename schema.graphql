@@ -19,6 +19,8 @@ type Post {
 }
 
 type Query {
+  # Information about the current user
+  self: User
   # Find a user by id
   user(id: ID!): User
   # Find a post by id
