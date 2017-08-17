@@ -27,7 +27,13 @@ const logErr = msg => console.error(chalk.red(`==> ${err}`))
 const app = express()
 
 // Logging requests
-app.use(morgan('dev'))
+app.use(
+  morgan(
+    `${chalk.cyan(
+      'REQUEST '
+    )} :method :url :status :response-time ms - :res[content-length]`
+  )
+)
 
 // Configure auth
 passport.use(

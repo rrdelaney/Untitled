@@ -10,13 +10,13 @@ let root
 let store
 let client
 
-window.onload = () => {
+window.onPageLoad.then(() => {
   root = document.getElementById('root')
   client = configureClient()
   store = configureStore(window.INITIAL_STATE, client)
 
   ReactDOM.render(<App store={store} client={client} />, root)
-}
+})
 ;(module: any)
 if (module.hot) {
   ;(module.hot: any).accept('./components/App', () => {

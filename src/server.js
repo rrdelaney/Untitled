@@ -5,6 +5,8 @@ import { renderToStringWithData } from 'react-apollo'
 import serialize from 'serialize-javascript'
 import type { $Request, $Response, NextFunction } from 'express'
 import { graphqlExpress } from 'apollo-server-express'
+import log from './log'
+import createPage from './page'
 import configureServerClient from './apollo/configureServerClient'
 import _db from './api/db'
 import schema from './api/schema'
@@ -37,38 +39,38 @@ export async function handleGraphQL(
 }
 
 export async function handleRequest(req: $Request, res: $Response) {
-  const user = serializeUser(req)
-  const context = new Context(await _db, user)
-  const store = configureStore()
-  const client = configureServerClient(context)
-
-  if (user) store.dispatch(login(user))
-
-  const content = await renderToStringWithData(
-    <App store={store} client={client} />
-  )
-
-  const initialState = getInitialState(store, client)
   const assets = getAssets(res)
+  const page = createPage(assets)
 
-  res.status(200).send(`<!doctype html>
-<html>
-  <head>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
-    ${assets
-      .filter(s => s.endsWith('.css'))
-      .map(s => `<link rel="stylesheet" href="${s}">`)
-      .join('    \n')}
-    ${assets
-      .filter(s => s.endsWith('.js') && !s.includes('hot-update'))
-      .map(s => `<script async src="${s}"></script>`)
-      .join('    \n')}
-    <script>window.INITIAL_STATE = ${initialState}</script>
-  </head>
-  <body>
-    <div id="root">${content}</div>
-  </body>
-</html>`)
+  const { value: head } = page.next()
+  if (!head) throw new Error('Expected a head from page!')
+
+  try {
+    res.status(200)
+    res.write(head)
+
+    const user = serializeUser(req)
+    const context = new Context(await _db, user)
+    const store = configureStore()
+    const client = configureServerClient(context)
+
+    if (user) store.dispatch(login(user))
+
+    const content = await renderToStringWithData(
+      <App store={store} client={client} />
+    )
+
+    const initialState = getInitialState(store, client)
+
+    const { value: body } = page.next({ initialState, content })
+    if (!body) throw new Error('Expected a body from page!')
+
+    res.end(body)
+  } catch (error) {
+    log(error)
+    const { value: end } = page.next({ error })
+    res.end(end)
+  }
 }
 
 export function handleError(
@@ -77,33 +79,9 @@ export function handleError(
   res: $Response,
   next: NextFunction
 ) {
-  if (res.headersSent) {
-    return next(err)
-  }
+  log(err)
 
-  console.error(err.stack)
-  res.status(500).send(`<!doctype html>
-<html>
-  <head>
-    <style>
-      h1 {
-        color: red;
-        font-family: 'Helvetica Neue';
-        font-size: 36pt;
-        font-weight: 300;
-      }
-      pre {
-        font-family: 'Operator Mono';
-        font-size: 10pt;
-        width: 90vw;
-        white-space: pre-wrap;
-      }
-    </style>
-  <body>
-    <h1>There was an error :(</h1>
-    <pre>${err.stack}</pre>
-  </body>
-</html>`)
+  return res.status(500).send(`Internal server error`)
 }
 
 function getAssets(res: any): string[] {

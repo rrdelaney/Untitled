@@ -1,6 +1,7 @@
 // @flow
 
 import massive from 'massive'
+import log from '../log'
 
 export default massive(process.env.DATABASE_URL, undefined, {
   query(e) {
@@ -12,7 +13,7 @@ export default massive(process.env.DATABASE_URL, undefined, {
       !query.includes('pg_namespace')
 
     if (shouldLogQuery) {
-      console.log(query)
+      log(query, 'QUERY', 'magenta')
     }
   }
 })
