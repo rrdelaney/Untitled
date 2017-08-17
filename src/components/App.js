@@ -2,9 +2,10 @@
 
 import React from 'react'
 import { ApolloProvider, ApolloClient } from 'react-apollo'
+import { Route, Switch } from 'react-router'
 import type { Store } from '../store'
-import Name from './Name'
-import Posts from './Posts'
+import Home from './Home'
+import NotFound from './NotFound'
 
 type AppProps = {
   store: Store,
@@ -14,10 +15,10 @@ type AppProps = {
 export default function App({ store, client }: AppProps) {
   return (
     <ApolloProvider store={store} client={client}>
-      <div>
-        <Name />
-        <Posts />
-      </div>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route component={NotFound} />
+      </Switch>
     </ApolloProvider>
   )
 }

@@ -5,6 +5,7 @@ import { renderToStringWithData } from 'react-apollo'
 import serialize from 'serialize-javascript'
 import type { $Request, $Response, NextFunction } from 'express'
 import { graphqlExpress } from 'apollo-server-express'
+import { StaticRouter } from 'react-router-dom'
 import log from './log'
 import createPage from './page'
 import configureServerClient from './apollo/configureServerClient'
@@ -53,11 +54,14 @@ export async function handleRequest(req: $Request, res: $Response) {
     const context = new Context(await _db, user)
     const store = configureStore()
     const client = configureServerClient(context)
+    const routerContext: { url?: string } = {}
 
     if (user) store.dispatch(login(user))
 
     const content = await renderToStringWithData(
-      <App store={store} client={client} />
+      <StaticRouter location={req.url} context={routerContext}>
+        <App store={store} client={client} />
+      </StaticRouter>
     )
 
     const initialState = getInitialState(store, client)

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
 import configureStore from './store'
 import configureClient from './apollo/configureClient'
 import App from './components/App'
@@ -15,12 +16,22 @@ window.onPageLoad.then(() => {
   client = configureClient()
   store = configureStore(window.INITIAL_STATE, client)
 
-  ReactDOM.render(<App store={store} client={client} />, root)
+  ReactDOM.render(
+    <BrowserRouter>
+      <App store={store} client={client} />
+    </BrowserRouter>,
+    root
+  )
 })
 ;(module: any)
 if (module.hot) {
   ;(module.hot: any).accept('./components/App', () => {
     const NextApp = require('./components/App').default
-    ReactDOM.render(<NextApp store={store} client={client} />, root)
+    ReactDOM.render(
+      <BrowserRouter>
+        <NextApp store={store} client={client} />
+      </BrowserRouter>,
+      root
+    )
   })
 }
