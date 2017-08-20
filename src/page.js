@@ -37,7 +37,7 @@ export default function* page(
 <html lang="en">
   <head>
     <title>Things</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css" media="all"></link>
     ${assets
       .filter(s => s.endsWith('.css'))
       .map(s => `<link rel="stylesheet" href="${s}">`)
