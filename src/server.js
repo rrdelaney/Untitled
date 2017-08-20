@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react'
-import { renderToStringWithData } from 'react-apollo'
+import { renderToStream } from 'react-dom/server'
+import { getDataFromTree } from 'react-apollo'
 import serialize from 'serialize-javascript'
 import type { $Request, $Response, NextFunction } from 'express'
 import { graphqlExpress } from 'apollo-server-express'
@@ -58,17 +59,29 @@ export async function handleRequest(req: $Request, res: $Response) {
 
     if (user) store.dispatch(login(user))
 
-    const content = await renderToStringWithData(
+    const app = (
       <StaticRouter location={req.url} context={routerContext}>
         <App store={store} client={client} />
       </StaticRouter>
     )
 
+    await getDataFromTree(app)
     const initialState = getInitialState(store, client)
 
-    const { value: body } = page.next({ initialState, content })
-    if (!body) throw new Error('Expected a body from page!')
+    const { value: startBody } = page.next({ initialState })
+    if (!startBody) throw new Error('Expected the body to start from the page!')
+    res.write(startBody)
 
+    const appRender = renderToStream(app)
+    appRender.on('data', data => res.write(data))
+
+    await new Promise((resolve, reject) => {
+      appRender.on('end', resolve)
+      appRender.on('error', reject)
+    })
+
+    const { value: body } = page.next({})
+    if (!body) throw new Error('Expected a body from page!')
     res.end(body)
   } catch (error) {
     log(error)

@@ -16,7 +16,7 @@ window.onPageLoad.then(() => {
   client = configureClient()
   store = configureStore(window.INITIAL_STATE, client)
 
-  ReactDOM.render(
+  ReactDOM.hydrate(
     <BrowserRouter>
       <App store={store} client={client} />
     </BrowserRouter>,
