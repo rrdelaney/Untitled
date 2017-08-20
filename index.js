@@ -4,6 +4,7 @@ require('dotenv').config()
 
 const path = require('path')
 const express = require('express')
+const compression = require('compression')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
@@ -25,6 +26,9 @@ const logMsg = msg => console.log(chalk.cyan(`==> ${msg}`))
 const logErr = msg => console.error(chalk.red(`==> ${err}`))
 
 const app = express()
+
+// gzip assets
+if (IS_PRODUCTION) app.use(compression())
 
 // Logging requests
 app.use(

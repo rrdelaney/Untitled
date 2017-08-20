@@ -34,9 +34,10 @@ export default function* page(
   assets: string[]
 ): Generator<string, string, Next> {
   const { initialState, error: error1 } = yield `<!doctype html>
-<html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
+    <title>Things</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"></link>
     ${assets
       .filter(s => s.endsWith('.css'))
       .map(s => `<link rel="stylesheet" href="${s}">`)
