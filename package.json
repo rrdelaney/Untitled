@@ -1,5 +1,5 @@
 {
-  "name": "things.xyz",
+  "name": "untitled",
   "version": "1.0.0",
   "description": "A federated community newspaper",
   "main": "index.js",
@@ -10,6 +10,7 @@
     "start": "node index.js",
     "build": "webpack --config scripts/webpack.config.prod.js",
     "postbuild": "babel src --out-dir lib",
+    "heroku-postbuild": "babel src --out-dir lib && webpack --config scripts/webpack.config.prod.js",
     "pretest": "flow",
     "test": "jest"
   },
