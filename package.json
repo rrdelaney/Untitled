@@ -6,6 +6,9 @@
   "repository": "https://github.com/rrdelaney/things.xyz",
   "author": "Ryan Delaney <rrdelaney@outlook.com>",
   "license": "MIT",
+  "engines": {
+    "node": "8.4.x"
+  },
   "scripts": {
     "start": "node index.js",
     "build": "webpack --config scripts/webpack.config.prod.js",
