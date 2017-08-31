@@ -3,6 +3,7 @@
 import React from 'react'
 import { renderToStream } from 'react-dom/server'
 import { getDataFromTree } from 'react-apollo'
+import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
 import serialize from 'serialize-javascript'
 import type { $Request, $Response, NextFunction } from 'express'
 import { graphqlExpress } from 'apollo-server-express'
@@ -55,20 +56,24 @@ export async function handleRequest(req: $Request, res: $Response) {
     const context = new Context(await _db, user)
     const store = configureStore()
     const client = configureServerClient(context)
+    const sheet = new ServerStyleSheet()
     const routerContext: { url?: string } = {}
 
     if (user) store.dispatch(login(user))
 
     const app = (
       <StaticRouter location={req.url} context={routerContext}>
-        <App store={store} client={client} />
+        <StyleSheetManager sheet={sheet.instance}>
+          <App store={store} client={client} />
+        </StyleSheetManager>
       </StaticRouter>
     )
 
     await getDataFromTree(app)
     const initialState = getInitialState(store, client)
+    const initialStyles = sheet.getStyleTags()
 
-    const { value: startBody } = page.next({ initialState })
+    const { value: startBody } = page.next({ initialState, initialStyles })
     if (!startBody) throw new Error('Expected the body to start from the page!')
     res.write(startBody)
 

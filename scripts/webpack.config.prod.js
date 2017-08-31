@@ -38,7 +38,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new EnvironmentPlugin({ NODE_ENV: 'production' }),
+    new EnvironmentPlugin({ NODE_ENV: 'production', APP_ENV: 'browser' }),
     new UglifyJsPlugin({
       sourceMap: true,
       beautify: false,

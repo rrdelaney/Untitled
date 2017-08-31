@@ -1,6 +1,9 @@
+// @flow
+
 import React from 'react'
 import { gql, graphql } from 'react-apollo'
-import { Loader } from 'semantic-ui-react'
+import styled from 'styled-components'
+import { Image, Loader } from 'semantic-ui-react'
 
 const PostData = gql`
   query PostData($id: ID!) {
@@ -15,14 +18,17 @@ const PostData = gql`
   }
 `
 
+const PostHeader = styled.div`width: 100vw;`
+
 function Post({ data }) {
   if (data.loading) return <Loader active />
   if (!data.post) return null
 
   return (
-    <div>
+    <PostHeader>
+      <Image src="https://unsplash.it/1000/300" fluid />
       {data.post.title} by {data.post.author.name}
-    </div>
+    </PostHeader>
   )
 }
 

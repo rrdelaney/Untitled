@@ -2,6 +2,7 @@
 
 type Next = {
   initialState?: string,
+  initialStyles?: string,
   error?: Error
 }
 
@@ -33,7 +34,7 @@ const errorParts = {
 export default function* page(
   assets: string[]
 ): Generator<string, string, Next> {
-  const { initialState, error: error1 } = yield `<!doctype html>
+  const { initialState, initialStyles, error: error1 } = yield `<!doctype html>
 <html lang="en">
   <head>
     <title>Things</title>
@@ -52,10 +53,8 @@ export default function* page(
     return errorParts.endHead() + errorParts.endBody(error1)
   }
 
-  const {
-    error: error2
-  } = yield `<script>window.INITIAL_STATE = ${initialState ||
-    'undefined'}</script>
+  const { error: error2 } = yield `${initialStyles ||
+    ''}<script>window.INITIAL_STATE = ${initialState || 'undefined'}</script>
   </head>
   <body>
     <div id="root">`

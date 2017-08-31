@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const { EnvironmentPlugin } = webpack
 const BeatifulWebpackPlugin = require('./beautiful-webpack')
 
 module.exports = {
@@ -40,6 +41,7 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new EnvironmentPlugin({ APP_ENV: 'browser' }),
     new BeatifulWebpackPlugin('Things', 'http://localhost:3000')
   ]
 }
