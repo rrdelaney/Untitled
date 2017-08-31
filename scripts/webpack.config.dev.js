@@ -26,6 +26,15 @@ module.exports = {
         include: [path.resolve(__dirname, '..', 'src')],
         loader: 'babel-loader',
         options: {
+          plugins: [
+            [
+              'styled-components',
+              {
+                ssr: true,
+                minify: true
+              }
+            ]
+          ],
           presets: [
             'react',
             [

@@ -11,6 +11,12 @@ let root
 let store
 let client
 
+window.onPageLoad =
+  window.onPageLoad ||
+  new Promise(resolve => {
+    document.addEventListener('DOMContentLoaded', resolve)
+  })
+
 window.onPageLoad.then(() => {
   root = document.getElementById('root')
   client = configureClient()

@@ -3,7 +3,7 @@
 import React from 'react'
 import { gql, graphql } from 'react-apollo'
 import styled from 'styled-components'
-import { Image, Loader } from 'semantic-ui-react'
+import { Container, Image, Header, Loader } from 'semantic-ui-react'
 
 const PostData = gql`
   query PostData($id: ID!) {
@@ -25,10 +25,19 @@ function Post({ data }) {
   if (!data.post) return null
 
   return (
-    <PostHeader>
-      <Image src="https://unsplash.it/1000/300" fluid />
-      {data.post.title} by {data.post.author.name}
-    </PostHeader>
+    <div>
+      <PostHeader>
+        <Image src="https://unsplash.it/1000/300/?blur" fluid />
+      </PostHeader>
+      <Container text>
+        <Header size="huge">
+          {data.post.title}
+        </Header>
+        <Header size="small">
+          {data.post.author.name}
+        </Header>
+      </Container>
+    </div>
   )
 }
 

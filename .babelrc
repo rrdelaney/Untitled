@@ -1,5 +1,14 @@
 {
-  "plugins": ["transform-object-rest-spread"],
+  "plugins": [
+    "transform-object-rest-spread",
+    [
+      "styled-components",
+      {
+        "ssr": true,
+        "minify": true
+      }
+    ]
+  ],
   "presets": [
     "react",
     [
