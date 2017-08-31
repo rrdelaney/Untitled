@@ -40,11 +40,11 @@ export default function* page(
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css" media="all"></link>
     ${assets
       .filter(s => s.endsWith('.css'))
-      .map(s => `<link rel="stylesheet" href="${s}">`)
+      .map(s => `<link rel="stylesheet" href="/${s}">`)
       .join('    \n')}
     ${assets
       .filter(s => s.endsWith('.js') && !s.includes('hot-update'))
-      .map(s => `<script async src="${s}"></script>`)
+      .map(s => `<script async src="/${s}"></script>`)
       .join('    \n')}
     <script>window.onPageLoad = new Promise(resolve => { window.pageLoaded = resolve })</script>`
 
