@@ -134,7 +134,10 @@ app.use('/graphql', (...handler) => {
     ? 'lib'
     : 'src'}/server`)
 
-  handleGraphQL(...handler).catch(e => handleError(e, ...handler))
+  handleGraphQL(...handler).catch(e => {
+    if (IS_PRODUCTION) Raven.captureException(e)
+    handleError(e, ...handler)
+  })
 })
 
 app.use(
@@ -150,7 +153,10 @@ app.use((...handler) => {
     ? 'lib'
     : 'src'}/server`)
 
-  handleRequest(...handler).catch(e => handleError(e, ...handler))
+  handleRequest(...handler).catch(e => {
+    if (IS_PRODUCTION) Raven.captureException(e)
+    handleError(e, ...handler)
+  })
 })
 
 // Set up Raven for error handling

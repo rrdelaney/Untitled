@@ -6,6 +6,11 @@ type Next = {
   error?: Error
 }
 
+const sentryDsn =
+  typeof process.env.SENTRY_DSN === 'string'
+    ? process.env.SENTRY_DSN.replace(/\:[\d\w]+/, '')
+    : ''
+
 const errorParts = {
   endHead: () => `<style>
     h1 {
@@ -48,8 +53,8 @@ export default function* page(
       .filter(s => s.endsWith('.js') && !s.includes('hot-update'))
       .map(s => `<script async src="/${s}"></script>`)
       .join('    \n')}
-    ${process.env.SENTRY_DSN
-      ? `<script>Raven.config('${process.env.SENTRY_DSN}').install()</script>`
+    ${sentryDsn
+      ? `<script>Raven.config('${sentryDsn}').install()</script>`
       : ''}
     <script>window.onPageLoad = new Promise(resolve => { window.pageLoaded = resolve })</script>`
 

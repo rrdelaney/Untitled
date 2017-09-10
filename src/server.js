@@ -1,7 +1,7 @@
 // @flow
 
-import * as React from 'react';
-import { renderToStream } from 'react-dom/server'
+import * as React from 'react'
+import { renderToNodeStream } from 'react-dom/server'
 import { getDataFromTree } from 'react-apollo'
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
 import serialize from 'serialize-javascript'
@@ -77,7 +77,7 @@ export async function handleRequest(req: $Request, res: $Response) {
     if (!startBody) throw new Error('Expected the body to start from the page!')
     res.write(startBody)
 
-    const appRender = renderToStream(app)
+    const appRender = renderToNodeStream(app)
     appRender.on('data', data => res.write(data))
 
     await new Promise((resolve, reject) => {

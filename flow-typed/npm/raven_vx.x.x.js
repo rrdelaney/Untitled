@@ -23,7 +23,8 @@ declare module 'raven' {
   declare interface Raven {
     config(dsn: string): RavenInstance,
     requestHandler(): express$Middleware,
-    errorHandler(): express$Middleware
+    errorHandler(): express$Middleware,
+    captureError(e: Error): void
   }
 
   declare module.exports: Raven
