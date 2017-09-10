@@ -18,11 +18,9 @@ const Posts = ({ data }) => {
 
   return (
     <List>
-      {data.self.posts.map(post =>
-        <List.Item key={post.title}>
-          {post.title}
-        </List.Item>
-      )}
+      {data.self.posts.map(post => (
+        <List.Item key={post.title}>{post.title}</List.Item>
+      ))}
     </List>
   )
 }

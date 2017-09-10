@@ -1,6 +1,6 @@
 // @flow
 
-import * as React from 'react';
+import * as React from 'react'
 import { gql, graphql } from 'react-apollo'
 import styled from 'styled-components'
 import { Container, Image, Header, Loader } from 'semantic-ui-react'
@@ -30,12 +30,8 @@ function Post({ data }) {
         <Image src="https://unsplash.it/1000/300/?blur" fluid />
       </PostHeader>
       <Container text>
-        <Header size="huge">
-          {data.post.title}
-        </Header>
-        <Header size="small">
-          {data.post.author.name}
-        </Header>
+        <Header size="huge">{data.post.title}</Header>
+        <Header size="small">{data.post.author.name}</Header>
       </Container>
     </div>
   )
