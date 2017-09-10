@@ -1,4 +1,3 @@
-drop table if exists issue_posts cascade;
 drop table if exists posts cascade;
 drop table if exists issues cascade;
 drop table if exists communities cascade;
@@ -18,19 +17,15 @@ create table issues (
   id serial primary key,
   headline varchar(255) not null,
   published date not null,
+  post_ids int[],
   community_id varchar(50) references communities(id)
 );
 
 create table posts (
   id serial primary key,
   title varchar(255) not null,
+  published date not null,
   content text not null,
   community_id varchar(50) references communities(id),
   author_id varchar(50) references users(id)
-);
-
-create table issue_posts (
-  issue_id serial references issues(id),
-  post_id serial references posts(id),
-  primary key (issue_id, post_id)
 );

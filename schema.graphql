@@ -5,7 +5,7 @@ type User {
   # Name of the user
   name: String!
   # All posts that they have made
-  posts: [Post]
+  posts: [Post]!
 }
 
 # A post on a topic
@@ -14,8 +14,38 @@ type Post {
   id: ID!
   # Post's title
   title: String!
+  # Post's content
+  content: String!
+  # Where the post was made
+  community: Community!
   # Post's author
   author: User!
+}
+
+# A community of posts and users
+type Community {
+  # Unique id for a community
+  id: ID!
+  # Community's proper name
+  name: String!
+  # Posts in a community
+  posts(offset: Int, limit: Int): [Post!]!
+  # Issues published in a community
+  issues(offset: Int, limit: Int): [Issue!]!
+}
+
+# A published issue from a community consisting of posts
+type Issue {
+  # Unique id given to the issue
+  id: ID!
+  # Headline for the issue
+  headline: String!
+  # Date of publication
+  published: String!
+  # All posts in a given issue
+  posts: [Post!]!
+  # Community the issue was published in
+  community: Community!
 }
 
 type Query {
@@ -25,6 +55,8 @@ type Query {
   user(id: ID!): User
   # Find a post by id
   post(id: ID!): Post
+  # Find a community by id
+  community(id: ID!): Community
 }
 
 schema {
