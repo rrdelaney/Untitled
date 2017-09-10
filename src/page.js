@@ -39,6 +39,7 @@ export default function* page(
   <head>
     <title>Things</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css" media="all"></link>
+    <script src="https://cdn.ravenjs.com/3.17.0/raven.min.js" crossorigin="anonymous"></script>
     ${assets
       .filter(s => s.endsWith('.css'))
       .map(s => `<link rel="stylesheet" href="/${s}">`)
@@ -47,6 +48,9 @@ export default function* page(
       .filter(s => s.endsWith('.js') && !s.includes('hot-update'))
       .map(s => `<script async src="/${s}"></script>`)
       .join('    \n')}
+    ${process.env.SENTRY_DSN
+      ? `<script>Raven.config('${process.env.SENTRY_DSN}').install()</script>`
+      : ''}
     <script>window.onPageLoad = new Promise(resolve => { window.pageLoaded = resolve })</script>`
 
   if (error1) {

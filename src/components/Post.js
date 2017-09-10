@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react';
 import { gql, graphql } from 'react-apollo'
 import styled from 'styled-components'
 import { Container, Image, Header, Loader } from 'semantic-ui-react'

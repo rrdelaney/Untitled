@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react';
 import { ApolloProvider, ApolloClient } from 'react-apollo'
 import { Route, Switch } from 'react-router'
 import type { Store } from '../store'

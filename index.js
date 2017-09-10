@@ -3,6 +3,7 @@ if (!IS_PRODUCTION) require('babel-register')({ cache: false })
 require('dotenv').config()
 
 const path = require('path')
+const Raven = require('raven')
 const express = require('express')
 const compression = require('compression')
 const bodyParser = require('body-parser')
@@ -17,15 +18,21 @@ const { graphiqlExpress } = require('apollo-server-express')
 const {
   PORT = 3000,
   HOSTNAME = 'http://localhost:3000',
+  SENTRY_DSN,
   REDIS_URL,
   FACEBOOK_APP_ID,
   FACEBOOK_APP_SECRET
 } = process.env
 
+if (IS_PRODUCTION && SENTRY_DSN) Raven.config(SENTRY_DSN).install()
+
 const logMsg = msg => console.log(chalk.cyan(`==> ${msg}`))
 const logErr = msg => console.error(chalk.red(`==> ${err}`))
 
 const app = express()
+
+// Configure Sentry
+if (IS_PRODUCTION) app.use(Raven.requestHandler())
 
 // gzip assets
 if (IS_PRODUCTION) app.use(compression())
@@ -145,6 +152,9 @@ app.use((...handler) => {
 
   handleRequest(...handler).catch(e => handleError(e, ...handler))
 })
+
+// Set up Raven for error handling
+if (IS_PRODUCTION) app.use(Raven.errorHandler())
 
 // Error handler for sync errors
 app.use((err, req, res, next) => {

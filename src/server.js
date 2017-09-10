@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react';
 import { renderToStream } from 'react-dom/server'
 import { getDataFromTree } from 'react-apollo'
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
