@@ -27,11 +27,18 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           plugins: [
+            'syntax-dynamic-import',
             [
               'styled-components',
               {
                 ssr: true,
                 minify: true
+              }
+            ],
+            [
+              'lodash',
+              {
+                id: ['lodash', 'semantic-ui-react']
               }
             ]
           ],
