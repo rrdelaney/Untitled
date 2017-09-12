@@ -29,7 +29,7 @@ type Community {
   # Community's proper name
   name: String!
   # Articles in a community
-  posts(offset: Int, limit: Int): [Article!]!
+  articles(offset: Int, limit: Int): [Article!]!
   # Issues published in a community
   issues(offset: Int, limit: Int): [Issue!]!
 }

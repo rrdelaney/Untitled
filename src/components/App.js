@@ -5,7 +5,7 @@ import { ApolloProvider, ApolloClient } from 'react-apollo'
 import { Route, Switch } from 'react-router'
 import type { Store } from '../store'
 import Home from './Home'
-import Post from './Post'
+import Article from './Article'
 import NotFound from './NotFound'
 
 type AppProps = {
@@ -18,7 +18,7 @@ export default function App({ store, client }: AppProps) {
     <ApolloProvider store={store} client={client}>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/post/:id" component={Post} />
+        <Route path="/article/:id" component={Article} />
         <Route component={NotFound} />
       </Switch>
     </ApolloProvider>

@@ -33,7 +33,7 @@ export const User = {
   }
 }
 
-export const Post = {
+export const Article = {
   author({ author_id }: ArticleType, args: mixed, c: Context) {
     return c.userById(author_id)
   },

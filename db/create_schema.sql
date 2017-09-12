@@ -1,3 +1,4 @@
+drop table if exists posts cascade;
 drop table if exists articles cascade;
 drop table if exists issues cascade;
 drop table if exists communities cascade;
