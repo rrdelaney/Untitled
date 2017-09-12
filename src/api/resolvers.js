@@ -2,7 +2,7 @@
 
 import type Context, {
   User as UserType,
-  Post as PostType,
+  Article as ArticleType,
   Issue as IssueType,
   Community as CommunityType
 } from './context'
@@ -12,8 +12,8 @@ export const Query = {
     return c.userById(id)
   },
 
-  post(root: mixed, { id }: { id: number }, c: Context) {
-    return c.postById(id)
+  article(root: mixed, { id }: { id: number }, c: Context) {
+    return c.articleById(id)
   },
 
   community(root: mixed, { id }: { id: string }, c: Context) {
@@ -28,28 +28,28 @@ export const Query = {
 }
 
 export const User = {
-  posts({ id }: UserType, args: mixed, c: Context) {
-    return c.postsByUser(id)
+  articles({ id }: UserType, args: mixed, c: Context) {
+    return c.articlesByUser(id)
   }
 }
 
 export const Post = {
-  author({ author_id }: PostType, args: mixed, c: Context) {
+  author({ author_id }: ArticleType, args: mixed, c: Context) {
     return c.userById(author_id)
   },
 
-  community({ community_id }: PostType, args: mixed, c: Context) {
+  community({ community_id }: ArticleType, args: mixed, c: Context) {
     return c.communityById(community_id)
   }
 }
 
 export const Community = {
-  posts(
+  articles(
     { id }: CommunityType,
     args: { offset: number, limit: number },
     c: Context
   ) {
-    return c.postsByCommunity(id, args.offset, args.limit)
+    return c.articlesByCommunity(id, args.offset, args.limit)
   },
 
   issues({ id }: CommunityType, args: mixed, c: Context) {
@@ -58,7 +58,7 @@ export const Community = {
 }
 
 export const Issue = {
-  posts({ post_ids }: IssueType, args: mixed, c: Context) {
-    return Promise.all(post_ids.map(id => c.postById(id)))
+  articles({ article_ids }: IssueType, args: mixed, c: Context) {
+    return Promise.all(article_ids.map(id => c.articleById(id)))
   }
 }

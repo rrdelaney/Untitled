@@ -7,7 +7,7 @@ export type User = {
   name: string
 }
 
-export type Post = {
+export type Article = {
   id: number,
   title: string,
   content: string,
@@ -24,7 +24,7 @@ export type Issue = {
   id: number,
   headline: string,
   published: Date,
-  post_ids: number[],
+  article_ids: number[],
   community_id: string
 }
 
@@ -41,20 +41,20 @@ export default class Context {
     return this.db.users.findOne({ id })
   }
 
-  postsByUser(id: string): Promise<Post[]> {
-    return this.db.posts.find({ author_id: id })
+  articlesByUser(id: string): Promise<Article[]> {
+    return this.db.articles.find({ author_id: id })
   }
 
-  postById(id: number): Promise<Post> {
-    return this.db.posts.findOne({ id })
+  articleById(id: number): Promise<Article> {
+    return this.db.articles.findOne({ id })
   }
 
-  postsByCommunity(
+  articlesByCommunity(
     id: string,
     offset?: number,
     limit?: number
-  ): Promise<Post[]> {
-    return this.db.posts.find(
+  ): Promise<Article[]> {
+    return this.db.articles.find(
       { community_id: id },
       { offset, limit, order: 'published' }
     )

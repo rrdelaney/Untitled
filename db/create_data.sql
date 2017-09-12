@@ -5,7 +5,7 @@ insert into communities values ('movies', 'Movies');
 insert into communities values ('science', 'Science');
 insert into communities values ('photography', 'Photography');
 
-insert into posts (title, published, content, community_id, author_id) values (
+insert into articles (title, published, content, community_id, author_id) values (
   'Top-grossing 2017 summer movies',
   date '2017-08-04',
   'Huge list here',
@@ -13,7 +13,7 @@ insert into posts (title, published, content, community_id, author_id) values (
   'tu_2'
 );
 
-insert into posts (title, published, content, community_id, author_id) values (
+insert into articles (title, published, content, community_id, author_id) values (
   'My favorite scenes in Avatar',
   date '2017-08-04',
   'Huge list here',
@@ -21,7 +21,7 @@ insert into posts (title, published, content, community_id, author_id) values (
   'tu_2'
 );
 
-insert into posts (title, published, content, community_id, author_id) values (
+insert into articles (title, published, content, community_id, author_id) values (
   'Highest rated movies ever',
   date '2017-08-04',
   'Huge list here',
@@ -29,7 +29,7 @@ insert into posts (title, published, content, community_id, author_id) values (
   'tu_1'
 );
 
-insert into posts (title, published, content, community_id, author_id) values (
+insert into articles (title, published, content, community_id, author_id) values (
   'Intro to Photography',
   date '2017-08-04',
   'This is how we do it',
@@ -37,7 +37,7 @@ insert into posts (title, published, content, community_id, author_id) values (
   'tu_1'
 );
 
-insert into posts (title, published, content, community_id, author_id) values (
+insert into articles (title, published, content, community_id, author_id) values (
   'Empty Space',
   date '2017-08-04',
   'This is a guide on empty space',

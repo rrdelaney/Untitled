@@ -4,7 +4,7 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import configureStore from './store'
-import configureClient from './apollo/configureClient'
+import configureBrowserClient from './apollo/configureBrowserClient'
 import App from './components/App'
 
 let root
@@ -25,7 +25,7 @@ window.onPageLoad =
 
 window.onPageLoad.then(() => {
   root = document.getElementById('root')
-  client = configureClient()
+  client = configureBrowserClient()
   store = configureStore(window.INITIAL_STATE, client)
 
   ReactDOM.hydrate(

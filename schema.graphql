@@ -5,20 +5,20 @@ type User {
   # Name of the user
   name: String!
   # All posts that they have made
-  posts: [Post]!
+  articles: [Article!]!
 }
 
 # A post on a topic
-type Post {
+type Article {
   # Unique id for a post
   id: ID!
-  # Post's title
+  # Article's title
   title: String!
-  # Post's content
+  # Article's content
   content: String!
   # Where the post was made
   community: Community!
-  # Post's author
+  # Article's author
   author: User!
 }
 
@@ -28,8 +28,8 @@ type Community {
   id: ID!
   # Community's proper name
   name: String!
-  # Posts in a community
-  posts(offset: Int, limit: Int): [Post!]!
+  # Articles in a community
+  posts(offset: Int, limit: Int): [Article!]!
   # Issues published in a community
   issues(offset: Int, limit: Int): [Issue!]!
 }
@@ -43,7 +43,7 @@ type Issue {
   # Date of publication
   published: String!
   # All posts in a given issue
-  posts: [Post!]!
+  articles: [Article!]!
   # Community the issue was published in
   community: Community!
 }
@@ -54,7 +54,7 @@ type Query {
   # Find a user by id
   user(id: ID!): User
   # Find a post by id
-  post(id: ID!): Post
+  article(id: ID!): Article
   # Find a community by id
   community(id: ID!): Community
 }

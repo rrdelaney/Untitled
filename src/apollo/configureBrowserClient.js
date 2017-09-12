@@ -2,7 +2,7 @@
 
 import { ApolloClient, createNetworkInterface } from 'react-apollo'
 
-export default function configureClient() {
+export default function configureBrowserClient() {
   const networkInterface = createNetworkInterface({
     uri: '/graphql',
     opts: {
