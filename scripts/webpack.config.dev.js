@@ -27,7 +27,6 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           plugins: [
-            'syntax-dynamic-import',
             [
               'styled-components',
               {
@@ -43,6 +42,7 @@ module.exports = {
             ]
           ],
           presets: [
+            'stage-2',
             'react',
             [
               'env',

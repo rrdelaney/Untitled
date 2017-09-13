@@ -1,7 +1,5 @@
 {
   "plugins": [
-    "syntax-dynamic-import",
-    "transform-object-rest-spread",
     [
       "styled-components",
       {
@@ -11,6 +9,7 @@
     ]
   ],
   "presets": [
+    "stage-2",
     "react",
     [
       "env",
