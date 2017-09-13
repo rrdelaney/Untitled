@@ -10,18 +10,18 @@ const handler = ($handler: (err: Error) => string): Handler => ({
   $handler
 })
 
-type LocalValues = Readable | Flush | Handler | Error | string
-type Locals = { [prop: string]: LocalValues | Promise<LocalValues> }
+type TemplateValue = Readable | Flush | Handler | Error | string
+type Locals<T> = { [prop: $Keys<T>]: Promise<T> }
 
 type Emitable = (cb: (data: string) => void) => Promise<void>
 
 function render(
   templateParts: string[],
-  ...values: Array<LocalValues | Promise<LocalValues>>
+  ...values: Array<TemplateValue | Promise<TemplateValue>>
 ): Emitable {
   let renderError: ?Error = null
   let buffer = ''
-  const parts: Array<LocalValues | Promise<LocalValues>> = []
+  const parts: Array<TemplateValue | Promise<TemplateValue>> = []
 
   for (let i = 0; i < templateParts.length; ++i) {
     parts.push(templateParts[i])
@@ -31,7 +31,7 @@ function render(
   return async cb => {
     for (let part of parts) {
       try {
-        const data: LocalValues = await part
+        const data: TemplateValue = await part
         if (data === undefined || data === null) continue
 
         if (data instanceof Error) {
@@ -67,14 +67,14 @@ function render(
   }
 }
 
-type RenderableProps = {
+type RenderableProps<T> = {
   render: typeof render,
-  locals: Locals,
+  locals: Locals<T>,
   flush: Flush,
   handler: typeof handler
 }
 
-export default class RenderStream {
+export default class RenderStream<T> {
   renderer: Emitable
 
   callbacks: {
@@ -90,7 +90,7 @@ export default class RenderStream {
   locals = new Proxy(
     {},
     {
-      get: (target, name) => {
+      get: (target, name: string) => {
         if (target[name]) return target[name]
 
         return new Promise(resolve => {
@@ -100,7 +100,7 @@ export default class RenderStream {
     }
   )
 
-  constructor(renderFn: (props: RenderableProps) => Emitable) {
+  constructor(renderFn: (props: RenderableProps<T>) => Emitable) {
     this.renderer = renderFn({ render, handler, flush, locals: this.locals })
   }
 
@@ -112,9 +112,9 @@ export default class RenderStream {
     })
   }
 
-  push(obj: Locals) {
+  push(obj: $Shape<Locals<T>>) {
     Object.entries(obj).forEach(([name, value]) => {
-      this.locals[name] = value
+      this.locals[name] = Promise.resolve(value)
 
       if (this.localsResolvers[name]) this.localsResolvers[name]()
     })
