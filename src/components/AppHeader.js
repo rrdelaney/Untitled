@@ -1,4 +1,5 @@
 import React from 'react'
+import { gql, graphql } from 'react-apollo'
 import styled from 'styled-components'
 import { Menu } from 'semantic-ui-react'
 
@@ -8,12 +9,23 @@ const AppHeaderContainer = styled.div`
   margin: 0 !important;
 `
 
-export default function AppHeader() {
+const UserData = gql`
+  query UserData {
+    self {
+      id
+    }
+  }
+`
+
+export function AppHeader({ data }) {
   return (
     <Menu inverted as={AppHeaderContainer}>
-      <Menu.Item name="editorials">Editorials</Menu.Item>
-      <Menu.Item name="reviews">Reviews</Menu.Item>
-      <Menu.Item name="upcomingEvents">Upcoming Events</Menu.Item>
+      <Menu.Item name="untitles">Untitiled Edition</Menu.Item>
+      <Menu.Menu position="right">
+        {data.self && <Menu.Item name="Logout">Logout</Menu.Item>}
+      </Menu.Menu>
     </Menu>
   )
 }
+
+export default graphql(UserData)(AppHeader)

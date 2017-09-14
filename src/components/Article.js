@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { gql, graphql } from 'react-apollo'
 import styled from 'styled-components'
-import { Container, Segment, Image, Header, Loader } from 'semantic-ui-react'
+import { Container, Label, Image, Header, Loader } from 'semantic-ui-react'
 import AppContainer from './AppContainer'
 
 const ArticleData = gql`
@@ -12,6 +12,10 @@ const ArticleData = gql`
       id
       title
       content
+      community {
+        id
+        name
+      }
       author {
         id
         name
@@ -33,11 +37,12 @@ function Article({ data }) {
         <Image src="https://unsplash.it/1000/300/?blur" fluid />
       </ArticleHeader>
       <Container text as={ArticleContainer}>
-        <Segment>
-          <Header size="huge">{data.article.title}</Header>
-          <Header size="small">{data.article.author.name}</Header>
-          <p>{data.article.content}</p>
-        </Segment>
+        <Label tag color="teal">
+          {data.article.community.name}
+        </Label>
+        <Header size="huge">{data.article.title}</Header>
+        <Header size="small">{data.article.author.name}</Header>
+        <p>{data.article.content}</p>
       </Container>
     </AppContainer>
   )

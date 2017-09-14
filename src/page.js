@@ -1,6 +1,6 @@
 // @flow
 
-import RenderStream from './render-stream'
+import RenderStream from './packages/render-stream'
 
 type Next = {
   initialState?: string,
