@@ -14,6 +14,7 @@ import type { Action } from './constants'
 export type Dispatch = _Dispatch<Action>
 export type Reducer = _Reducer<State, Action>
 export type Store = _Store<State, Action, Dispatch>
+export type { State }
 
 export default function configureStore(
   initialState?: State,

@@ -1,10 +1,14 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { compose, bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { gql, graphql } from 'react-apollo'
 import styled from 'styled-components'
 import { Menu } from 'semantic-ui-react'
+import type { State, Dispatch } from '../store'
+import { showModal } from '../store/actions'
 import LoginModal from './LoginModal'
 
 const AppHeaderContainer = styled.div`
@@ -13,13 +17,20 @@ const AppHeaderContainer = styled.div`
   margin: 0 !important;
 `
 
-const UserData = gql`
+const mapStateToProps = (state: State) => ({
+  shouldShowLoginModal: state.modal.modalKind === 'login'
+})
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators({ showModal }, dispatch)
+
+const withUserData = graphql(gql`
   query UserData {
     self {
       id
     }
   }
-`
+`)
 
 function AppHeader({ data }) {
   return (
@@ -40,4 +51,7 @@ function AppHeader({ data }) {
   )
 }
 
-export default graphql(UserData)(AppHeader)
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withUserData
+)(AppHeader)

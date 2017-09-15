@@ -12,11 +12,7 @@ export default function reducer(
 ): ModalState {
   switch (action.type) {
     case 'TOGGLE_MODAL':
-      if (action.open === false) {
-        return { modalKind: null }
-      } else {
-        return { modalKind: action.modalKind }
-      }
+      return { modalKind: action.modalKind }
 
     default:
       return state

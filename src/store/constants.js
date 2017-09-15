@@ -9,8 +9,7 @@ export type ModalKind = 'login' | null
 
 type ToggleModalAction = {
   type: 'TOGGLE_MODAL',
-  modalKind: ModalKind,
-  open: boolean
+  modalKind: ModalKind
 }
 
 export type Action = LoginAction | ToggleModalAction

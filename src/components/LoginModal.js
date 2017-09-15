@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react';
 import { Button, Header, Icon, Modal } from 'semantic-ui-react'
 
 type LoginModalProps = {
