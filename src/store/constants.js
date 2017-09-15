@@ -5,4 +5,12 @@ type LoginAction = {
   user: { id: string, name: string }
 }
 
-export type Action = LoginAction
+export type ModalKind = 'login' | null
+
+type ToggleModalAction = {
+  type: 'TOGGLE_MODAL',
+  modalKind: ModalKind,
+  open: boolean
+}
+
+export type Action = LoginAction | ToggleModalAction

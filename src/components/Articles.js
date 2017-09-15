@@ -5,6 +5,7 @@ import { Loader, List } from 'semantic-ui-react'
 const MyPosts = gql`
   query MyPosts {
     self {
+      id
       posts {
         title
       }
