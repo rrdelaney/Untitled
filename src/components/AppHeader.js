@@ -8,7 +8,7 @@ import { gql, graphql } from 'react-apollo'
 import styled from 'styled-components'
 import { Menu } from 'semantic-ui-react'
 import type { State, Dispatch } from '../store'
-import { showModal } from '../store/actions'
+import { showModal as showModalAction } from '../store/actions'
 import LoginModal from './LoginModal'
 
 const AppHeaderContainer = styled.div`
@@ -22,7 +22,7 @@ const mapStateToProps = (state: State) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ showModal }, dispatch)
+  bindActionCreators({ showModal: showModalAction }, dispatch)
 
 const withUserData = graphql(gql`
   query UserData {
@@ -32,7 +32,10 @@ const withUserData = graphql(gql`
   }
 `)
 
-function AppHeader({ data }) {
+function AppHeader({ data, shouldShowLoginModal, showModal }) {
+  const openLoginModal = () => showModal('login', true)
+  const closeLoginModal = () => showModal('login', false)
+
   return (
     <Menu inverted as={AppHeaderContainer}>
       <Menu.Item name="Home" as={Link} to="/">
@@ -44,8 +47,14 @@ function AppHeader({ data }) {
             Logout
           </Menu.Item>
         )}
-        {!data.self && <Menu.Item name="Login">Login</Menu.Item>}
-        {!data.self && <LoginModal open={false} />}
+        {!data.self && (
+          <Menu.Item name="Login" onClick={openLoginModal}>
+            Login
+          </Menu.Item>
+        )}
+        {!data.self && (
+          <LoginModal open={shouldShowLoginModal} onClose={closeLoginModal} />
+        )}
       </Menu.Menu>
     </Menu>
   )

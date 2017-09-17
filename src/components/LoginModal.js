@@ -1,30 +1,37 @@
 // @flow
 
-import * as React from 'react';
+import * as React from 'react'
 import { Button, Header, Icon, Modal } from 'semantic-ui-react'
 
 type LoginModalProps = {
-  open: boolean
+  open: boolean,
+  onClose: () => void
 }
 
-export default function LoginModal({ open }: LoginModalProps) {
+export default function LoginModal({ open, onClose }: LoginModalProps) {
   return (
-    <Modal open={open} basic size="small">
-      <Header icon="archive" content="Archive Old Messages" />
+    <Modal
+      open={open}
+      onClose={onClose}
+      closeIcon
+      basic
+      dimmer="blurring"
+      size="small"
+    >
+      <Header icon="sign in" content="Sign in" />
       <Modal.Content>
         <p>
-          Your inbox is getting full, would you like us to enable automatic
-          archiving of old messages?
+          <Button color="facebook">
+            <Icon name="facebook" /> Facebook
+          </Button>
+        </p>
+
+        <p>
+          <Button color="google plus">
+            <Icon name="google plus" /> Google
+          </Button>
         </p>
       </Modal.Content>
-      <Modal.Actions>
-        <Button basic color="red" inverted>
-          <Icon name="remove" /> No
-        </Button>
-        <Button color="green" inverted>
-          <Icon name="checkmark" /> Yes
-        </Button>
-      </Modal.Actions>
     </Modal>
   )
 }
